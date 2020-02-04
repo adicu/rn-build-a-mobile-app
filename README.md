@@ -1,10 +1,12 @@
 # Build a Mobile App with React Native
 
-This lecture is meant for [DevFest '20](https://devfe.st), but feel free to use it any way you like.
+This workshop has been arranged for [DevFest '20](https://2020.devfe.st), but feel free to use it any way you like.
+
+[Click here for the Accompanying Slides](https://tinyurl.com/devfest20rn)
 
 ## Introduction
 
-In this workshop, you'll be making a simple app where you can create study locations at Columbia on a map! We call this app StudyBuddy, and here's how it'll look on an iPhone X in the end:
+In this workshop, we'll develop a simple app where you can create study locations at Columbia on a map! Let's call this app StudyBuddy, and here's how it'll look on an iPhone X in the end:
 
 <img src="assets/preview.png" style="height: 400px;" />
 
@@ -12,25 +14,27 @@ In this workshop, you'll be making a simple app where you can create study locat
 
 ## Setup
 
-1. Make sure you have [git](https://git-scm.com/) and [Node.js](https://nodejs.org/en/) installed on your computer. Follow these links to install.<br/><br/>
+1. Make sure you have [git](https://git-scm.com/) and [Node.js](https://nodejs.org/en/) installed on your computer. Follow the above links to install.<br/><br/>
 2. <img src="https://hackernoon.com/drafts/xa1cw305h.png" width="200px"/><br/> Expo is an awesome tool for creating React Native apps on the fly! Download the CLI tool using this command: `npm install -g expo-cli`. Then, download the client app on your mobile phone through the [App Store](https://apps.apple.com/us/app/expo-client/id982107779) or [Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en_US). You'll be prompted to create an account, and please do! <br/><br/>
-3. Go into Terminal or Command Prompt and `cd` to the directory of your choice. Then, clone the starter code using the following command: `https://github.com/adicu/rn-build-a-mobile-app.git`.<br/><br/>
-4. Finally, navigate to this directory using `cd rn-build-a-mobile-app` and then run `npm install` to install this project's dependencies. You're now ready to code!<br/><br/>
+3. Go into Terminal or Command Prompt and `cd` to the directory of your choice. Then, clone the starter code using the following command: `git clone https://github.com/adicu/rn-build-a-mobile-app.git`.<br/><br/>
+4. Finally, navigate to this directory using `cd rn-build-a-mobile-app` and then run `npm install` to install this project's dependencies. (If you're on Windows, you'll likely have to use 'Node.js Command Prompt' instead of the regular command prompt.) You're now ready to code!<br/><br/>
 
 ## Pre-Coding Notes
 
-- To run this program, you'll be running `npm start`. However, the starter code comes incomplete and so a bunch of errors will be thrown.<br/><br/>
+- To run this program, simply run `npm start` from the project directory. This command will open a new browser window with the Expo console. From there (and ensuring you have the Expo Client installed on your phone), simply capture the QR code on your phone and have it redirect to the client app.<br/>
+<img src="assets/expo.png" style="width: 400px;" /><br/>
+However, the starter code comes incomplete and so, if your app loads successfully, you'll see a blank screen. That's good; keep the app running on your phone so you can see your changes as you code. If your app ever crashes or freezes, simply press `Ctrl+C` to close the terminal and repeat this step.<br/><br/>
 - To expedite this workshop, a lot of code has been written for you, specifically under `src/components`, `src/constants`, and `src/util`. No need to touch any code here.<br/><br/>
 
 ## Exploration
 
-1. Navigate to `App.tsx` and explore it a little bit. It's very short and all it does is, you guessed it, render our `<MainScreen>` component to the top of the navigation stack. The `render()` function is the most important function inherited from the `Component` React class. By putting the `MainScreen` component in a JSX/TSX (for TypeScript) tag, you are shorthandedly invoking its `render()` function this way.<br/><br/>
+1. Navigate to `App.tsx` and explore it a little bit. It's very short and all it does is, you guessed it, render the `<MainScreen>` component to the top of the navigation stack. The `render()` function is the most important function inherited from the `Component` React class. By putting the `MainScreen` component in a [JSX/TSX](https://www.typescriptlang.org/docs/handbook/jsx.html) (for TypeScript) tag, you are shorthandedly invoking its `render()` function this way.<br/><br/>
 2. Now, navigate to `src/screens/MainScreen.tsx`. For now, this component is pretty empty, but it'll soon house all the functionality we need.<br/><br/>
 3. Finally, navigate to `src/interfaces/StudyZone.ts`. By using TypeScript instead of JavaScript, we're provided with the advantage of using typed interfaces when storing and retrieving objects. We'll create the `StudyZone` interface first.<br/><br/>
 
 ## Let's Code It
 
-1. Make sure you're currently in the `StudyZone` interface file (`src/interfaces/StudyZone.ts`). We want a way to store and retrieve location information when we view our study map. The first thing we'll need is obviously a `location` property, and we'll use the `LatLng` class from [react-native-maps](https://github.com/react-native-community/react-native-maps) to our benefit. Next, we'll add a simple `name` string to name our locations. Our completed `StudyZone` interface should look as follows (make sure to save your work):
+1. Navigate to the `StudyZone` interface file (`src/interfaces/StudyZone.ts`). We want a way to store and retrieve location information when we view our study map. The first thing we'll need is obviously a `location` property, and we'll use the `LatLng` class from [react-native-maps](https://github.com/react-native-community/react-native-maps) to our benefit. Next, we'll add a simple `name` string to name our locations. Our completed `StudyZone` interface should look as follows (make sure to save your work):
 ```
 import { LatLng } from 'react-native-maps'
 
@@ -171,7 +175,13 @@ map: {
     closeDialog={() => { this.toggleDialog(false) }}>
 </DialogInput>
 ```
-10. Now, let's start to write the function handlers. First, we need to write the function that triggers the dialog that prompts the user for the name of their study zone. It takes in an event fired by the map when the user double taps it, parses the exact coordinates the user had tapped, and sets the `studyZoneLocation` class property. Put the following under `render()`:
+10. Let's create the `toggleDialog` function that simply sets the `isDialogOpen` property of our `state` variable in order to show/hide the dialog. Write the following under `createStudyZone`:
+```
+private toggleDialog = (isDialogOpen:boolean):void => {
+    this.setState({ isDialogOpen })
+}
+```
+11. Now, let's start to write the function handlers. First, we need to write the function that triggers the dialog that prompts the user for the name of their study zone. It takes in an event fired by the map when the user double taps it, parses the exact coordinates the user had tapped, and sets the `studyZoneLocation` class property. Put the following under `render()`:
 ```
 private promptCreateStudyZone = (event:MapEvent):void => {
     const coordinate:LatLng = event.nativeEvent.coordinate
@@ -179,11 +189,74 @@ private promptCreateStudyZone = (event:MapEvent):void => {
     this.toggleDialog(true)
 }
 ```
-11. You may have noticed that we set the `studyZoneLocation` class property before even defining it. Add this to the top of the `MainScreen.tsx` file:
+12. You may have noticed that we set the `studyZoneLocation` class property before even defining it. Add this to the top of the `MainScreen.tsx` file:
 ```
 private studyZoneLocation!:LatLng
 ```
-12. Now, let's instantiate the `createStudyZone` function that's called when the user taps the submit button in the dialog. Note that the name is passed in as an argument, as mentioned previously, and so all we need to do is update the list of study zones both locally (in the component) and in storage. Finally, we can toggle the dialog to off.
+13. Now, let's instantiate the `createStudyZone` function that's called when the user taps the submit button in the dialog. Note that the name is passed in as an argument, as mentioned previously, and so all we need to do is update the list of study zones both locally (in the component) and in storage. Finally, we'll toggle the dialog to off.
+```
+private createStudyZone = (name:string):void => {
+    const newStudyZone = {
+        name,
+        location: this.studyZoneLocation
+    }
+    const studyZones = this.state.studyZones.concat([ newStudyZone ])
+    this.setState({ studyZones })
+    StorageUtil.set(STUDY_ZONE_KEY, studyZones)
+    this.toggleDialog(false)
+}
+```
+
+## We're done... kinda
+
+Reload your app in Expo (recall using `npm start` and capturing the QR code on your phone). You should be able to double tap anywhere on the map and create new study zones! Otherwise, figure out what's going wrong—–[StackOverflow](https://stackoverflow.com) is your best friend here.
+
+We're finally done! Just kidding. We have the functionality to create study zones now, but what about **deleting** them? Let's implement this functionality next.
+
+## Deleting Study Zones
+
+1. Once again, for the sake of brevity, we'll implement the functionality to delete all study zones on our map. Firstly, we should display a button to perform this action *only* if the user has already created at least one study zone. This can be accomplished by [short-circuiting]() the button we'll be creating by prepending the `this.state.studyZones.length > 0` condition. To implement the button container, we'll be using the [TouchableOpacity](https://facebook.github.io/react-native/docs/touchableopacity) component, which has an `onPress` handler. Add the following between `<MainNavigationBar />` and `<MapView>`, and don't forget the braces:
+```
+{
+    this.state.studyZones.length > 0 &&
+    <TouchableOpacity style={styles.deleteButton} onPress={this.deleteStudyZones}>
+        <Text style={styles.deleteButtonText}>
+            Delete All Study Zones
+        </Text>
+    </TouchableOpacity>
+}
+```
+2. Next, let's style the button! You know what to do:
+```
+deleteButton: {
+    zIndex: 1,
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primary,
+
+    top: DeviceUtil.statusBarHeight() + DeviceUtil.scale(60),
+    left: DeviceUtil.scale(30),
+    right: DeviceUtil.scale(30),
+
+    padding: DeviceUtil.scale(12),
+},
+deleteButtonText: {
+    color: colors.light,
+    fontWeight: '900',
+    textAlign: 'center',
+    fontSize: DeviceUtil.scaleFont(18),
+},
+```
+3. Finally, let's create the `deleteStudyZones` handler that'll remove the study zones from `state` and local storage. Put the following at the end of the `MainScreen` class.
+```
+private deleteStudyZones =() => {
+    StorageUtil.remove(STUDY_ZONE_KEY)
+    this.setState({ studyZones: [] })
+}
+```
+4. And... we're done! Once again, test your app out with `npm start` if it isn't already running. Congrats on taking your first step in becoming a React Native beast.
+
 
 <hr/>
 
