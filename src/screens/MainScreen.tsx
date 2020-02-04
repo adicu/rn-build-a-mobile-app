@@ -12,7 +12,11 @@ import { StudyZone } from '../interfaces'
 const DISTANCE_DELTA = 0.006
 const STUDY_ZONE_KEY = 'studyZones'
 
+// START SOLUTION
+
 export class MainScreen extends Component {
+
+    private studyZoneLocation!:LatLng
 
     public state = {
         region: {
@@ -22,7 +26,6 @@ export class MainScreen extends Component {
             longitudeDelta: DISTANCE_DELTA,
         } as Region,
         studyZones: [] as StudyZone[],
-        studyZoneLocation: null as LatLng,
         isDialogOpen: false as boolean,
     }
 
@@ -81,19 +84,19 @@ export class MainScreen extends Component {
 
     private promptCreateStudyZone = (event:MapEvent):void => {
         const coordinate:LatLng = event.nativeEvent.coordinate
-        this.setState({ studyZoneLocation: coordinate })
+        this.studyZoneLocation = coordinate
         this.toggleDialog(true)
     }
 
     private createStudyZone = (name:string):void => {
         const newStudyZone = {
             name,
-            location: this.state.studyZoneLocation
+            location: this.studyZoneLocation
         }
         const studyZones = this.state.studyZones.concat([ newStudyZone ])
         this.setState({ studyZones })
-        this.toggleDialog(false)
         StorageUtil.set(STUDY_ZONE_KEY, studyZones)
+        this.toggleDialog(false)
     }
 
     private toggleDialog = (isDialogOpen:boolean):void => {
@@ -130,9 +133,6 @@ const MainNavigationBar = () => (
  */
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
     navigationBar: {
         backgroundColor: colors.quaternary,
     },
@@ -164,5 +164,7 @@ const styles = StyleSheet.create({
         fontWeight: '900',
         textAlign: 'center',
         fontSize: DeviceUtil.scaleFont(18),
-    }
+    },
 })
+
+// END SOLUTION
