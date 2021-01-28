@@ -11,7 +11,7 @@
     "@react-native-community/masked-view": "^0.1.6",
     "@types/react-native-maps": "^0.24.0",
     "@types/react-native-status-bar-height": "^2.1.0",
-    "expo": "~36.0.0",
+    "expo": "~37.0.0",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
